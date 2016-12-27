@@ -8,13 +8,52 @@
 
 import SpriteKit
 import GameplayKit
+import CoreMotion
 
 class GameScene: SKScene {
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    //private var label : SKLabelNode?
+    //private var spinnyNode : SKShapeNode?
+    
+    let motionManager = CMMotionManager()
+    
+    private let SHORT_EDGE_NO = 3
+    private let LONG_EDGE_NO = 5
     
     override func didMove(to view: SKView) {
+        
+        let leftEdge = -self.size.width / 2
+        let bottomEdge = -self.size.height / 2
+        let sideStep = self.size.width / CGFloat(SHORT_EDGE_NO + 1)
+        let upStep = self.size.height / CGFloat(LONG_EDGE_NO + 1)
+        
+        let screenRect = CGRect(x: leftEdge, y: bottomEdge, width: self.size.width, height: self.size.height)
+        
+        self.physicsBody = SKPhysicsBody.init(edgeLoopFrom: screenRect)
+        self.physicsWorld.gravity = CGVector(dx: 0.0, dy: 0.0)
+        
+        
+        for i in 1...SHORT_EDGE_NO {
+            for j in 1...LONG_EDGE_NO {
+                
+                let spr = SKShapeNode(circleOfRadius: 30)
+                spr.fillColor = SKColor.blue
+                spr.strokeColor = SKColor.blue
+                //circle.physicsBody = SKPhysicsBody(circleOfRadius: 10)
+                spr.position = CGPoint(x: (leftEdge + CGFloat(j)) + (CGFloat(i) * sideStep), y: bottomEdge + (CGFloat(j) * upStep))
+                self.addChild(spr)
+                
+                spr.physicsBody = SKPhysicsBody(circleOfRadius: 30)
+                
+            }
+            
+            //motionManager = CMMotionManager()
+            motionManager.startAccelerometerUpdates()
+            
+        }
+        
+        
+        /*
         
         // Get label node from scene and store it for use later
         self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
@@ -35,9 +74,11 @@ class GameScene: SKScene {
                                               SKAction.fadeOut(withDuration: 0.5),
                                               SKAction.removeFromParent()]))
         }
+ */
     }
     
     
+    /*
     func touchDown(atPoint pos : CGPoint) {
         if let n = self.spinnyNode?.copy() as! SKShapeNode? {
             n.position = pos
@@ -82,8 +123,15 @@ class GameScene: SKScene {
         for t in touches { self.touchUp(atPoint: t.location(in: self)) }
     }
     
+    */
+    
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        
+        if let accelerometerData = motionManager.accelerometerData {
+            physicsWorld.gravity = CGVector(dx: accelerometerData.acceleration.x * 50, dy: accelerometerData.acceleration.y * 50)
+        }
+        
     }
 }
