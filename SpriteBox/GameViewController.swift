@@ -30,6 +30,20 @@ class GameViewController: UIViewController {
             view.showsFPS = true
             view.showsNodeCount = true
         }
+        
+       // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDifferentView) name:@"showDifferenView" object:nil];
+
+        let nc = NotificationCenter.default
+        nc.addObserver(forName:Notification.Name(rawValue:"ShowSettings"),
+                       object:nil, queue:nil,
+                       using:showDifferentView)
+    
+        
+    }
+    
+    func showDifferentView(_: Notification) -> Void {
+        print("showDifferentView")
+        performSegue(withIdentifier: "xx", sender: self)
     }
 
     override var shouldAutorotate: Bool {
@@ -51,5 +65,11 @@ class GameViewController: UIViewController {
 
     override var prefersStatusBarHidden: Bool {
         return true
+    }
+    
+    @IBAction func cancelToSettingsViewController(segue:UIStoryboardSegue) {
+    }
+    
+    @IBAction func saveSettings(segue:UIStoryboardSegue) {
     }
 }

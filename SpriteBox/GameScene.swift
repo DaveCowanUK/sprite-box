@@ -27,6 +27,7 @@ class GameScene: SKScene {
         let sideStep = self.size.width / CGFloat(SHORT_EDGE_NO + 1)
         let upStep = self.size.height / CGFloat(LONG_EDGE_NO + 1)
         
+        
         let screenRect = CGRect(x: leftEdge, y: bottomEdge, width: self.size.width, height: self.size.height)
         
         self.physicsBody = SKPhysicsBody.init(edgeLoopFrom: screenRect)
@@ -39,8 +40,7 @@ class GameScene: SKScene {
                 let spr = SKShapeNode(circleOfRadius: 30)
                 spr.fillColor = SKColor.blue
                 spr.strokeColor = SKColor.blue
-                //circle.physicsBody = SKPhysicsBody(circleOfRadius: 10)
-                spr.position = CGPoint(x: (leftEdge + CGFloat(j)) + (CGFloat(i) * sideStep), y: bottomEdge + (CGFloat(j) * upStep))
+                spr.position = CGPoint(x: leftEdge + (CGFloat(i) * sideStep), y: bottomEdge + (CGFloat(j) * upStep))
                 self.addChild(spr)
                 
                 spr.physicsBody = SKPhysicsBody(circleOfRadius: 30)
@@ -51,6 +51,7 @@ class GameScene: SKScene {
             motionManager.startAccelerometerUpdates()
             
         }
+        
         
         
         /*
@@ -75,6 +76,14 @@ class GameScene: SKScene {
                                               SKAction.removeFromParent()]))
         }
  */
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("touchesEnded")
+        let nc = NotificationCenter.default
+        nc.post(name:Notification.Name(rawValue:"ShowSettings"),
+                object: nil,
+                userInfo: nil)
     }
     
     override func update(_ currentTime: TimeInterval) {
